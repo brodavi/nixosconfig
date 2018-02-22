@@ -17,8 +17,11 @@
 
   networking.hostName = "brodavi-nixos"; # Define your hostname.
   networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
-
   networking.useDHCP = true;
+  networking.extraHosts = "
+    127.0.0.1 localhost
+    127.0.0.1 sevgen-d8.test
+  ";
 
   # Set your time zone.
   time.timeZone = "America/Chicago";
@@ -28,13 +31,14 @@
   # List packages installed in system profile. To search by name, run:
   # $ nix-env -qaP | grep wget
   environment.systemPackages = with pkgs; [
-    git dhcp wget vim curl firefox chromium google-chrome tmux zsh oh-my-zsh pciutils atom gnome3.gnome_themes_standard zoom-us redshift-plasma-applet kdeApplications.kmix
+    git dhcp wget vim curl firefox chromium google-chrome inkscape gimp tmux zsh oh-my-zsh
+    gparted pciutils openjdk keepass atom gnome3.gnome_themes_standard vlc zoom-us
+    redshift-plasma-applet kdeApplications.kmix ark imagemagick maim
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
 
-  # programs.bash.enableCompletion = true;
   programs.zsh.enable = true;
 
   # List services that you want to enable:
@@ -42,12 +46,19 @@
   # Enable the OpenSSH daemon.
   services.openssh.enable = true;
 
+  # Open ports in the firewall.
+  # networking.firewall.allowedTCPPorts = [ ... ];
+  # networking.firewall.allowedUDPPorts = [ ... ];
+  # Or disable the firewall altogether.
+  # networking.firewall.enable = false;
+
   # Enable CUPS to print documents.
   services.printing.enable = true;
 
   # Enable the X11 windowing system.
   services.xserver.enable = true;
   services.xserver.layout = "us";
+  # services.xserver.xkbOptions = "eurosign:e";
 
   # Enable touchpad support.
   services.xserver.libinput.enable = true;

@@ -13,11 +13,11 @@
   boot.extraModulePackages = [ ];
 
   fileSystems."/" =
-    { device = "/dev/disk/by-uuid/4ba4b6c3-2664-4d1e-fe57-0eec8a4aea3a";
+    { device = "/dev/disk/by-uuid/bd05bc2f-a23a-426e-9079-543da7becaf0";
       fsType = "ext4";
     };
 
-  boot.initrd.luks.devices."cryptroot".device = "/dev/disk/by-uuid/4ba4b6c3-2664-4d1e-fe57-0eec8a4aea3a";
+  boot.initrd.luks.devices."cryptroot".device = "/dev/disk/by-uuid/4be4b6c3-2694-4a1d-af58-0eac8d2aef0a";
 
   fileSystems."/boot" =
     { device = "/dev/disk/by-uuid/202F-F791";
@@ -27,4 +27,5 @@
   swapDevices = [ ];
 
   nix.maxJobs = lib.mkDefault 8;
+  # powerManagement.cpuFreqGovernor = lib.mkDefault "powersave";
 }
