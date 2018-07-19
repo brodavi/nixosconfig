@@ -14,10 +14,21 @@
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
+  hardware.pulseaudio.enable = true;
+  hardware.pulseaudio.package = pkgs.pulseaudioFull;
+ 
+  # bluetooth
+  hardware.bluetooth.enable = true;
+ 
+  hardware.bluetooth.extraConfig = ''
+    [General]
+    Enable=Source,Sink,Media,Socket
+  '';
 
   networking.hostName = "brodavi-nixos"; # Define your hostname.
   networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
   networking.useDHCP = true;
+  # networking.networkmanager.enable = true;
   networking.extraHosts = "
     127.0.0.1 localhost
     127.0.0.1 sevgen-d8.test
@@ -32,28 +43,39 @@
   # $ nix-env -qaP | grep wget
   environment.systemPackages = with pkgs; [
     git dhcp wget vim curl firefox chromium google-chrome inkscape gimp tmux zsh oh-my-zsh
-    gparted pciutils openjdk keepass atom gnome3.gnome_themes_standard vlc zoom-us
-    redshift-plasma-applet kdeApplications.kmix ark imagemagick maim
+    gparted pciutils openjdk keepass atom gnome3.gnome_themes_standard vlc zoom-us peek
+    redshift-plasma-applet ark imagemagick maim file lsof tor-browser-bundle-bin audacity
+    unetbootin
+
+    # networkmanager
+
+    # bluetooth stuff
+    # bluez5_28 bluez-tools pavucontrol
+
+    # for patchwork
+    # nodejs-9_x gcc binutils gnumake python x11
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
 
   programs.zsh.enable = true;
+  virtualisation.virtualbox.host.enable = true;
 
   # List services that you want to enable:
 
   # Enable the OpenSSH daemon.
-  services.openssh.enable = true;
+  # services.openssh.enable = true;
 
   # Open ports in the firewall.
-  # networking.firewall.allowedTCPPorts = [ ... ];
+  networking.firewall.allowedTCPPorts = [ 8081 8080 3050 ];
   # networking.firewall.allowedUDPPorts = [ ... ];
   # Or disable the firewall altogether.
   # networking.firewall.enable = false;
 
   # Enable CUPS to print documents.
   services.printing.enable = true;
+  services.printing.drivers = [pkgs.hplip];
 
   # Enable the X11 windowing system.
   services.xserver.enable = true;
@@ -71,7 +93,7 @@
   users.users = {
     brodavi = {
       home = "/home/brodavi";
-      extraGroups = ["wheel" "networkmanager"];
+      extraGroups = ["audio" "wheel" "networkmanager"];
       isNormalUser = true;
       uid = 1000;
       shell = pkgs.zsh;
@@ -93,6 +115,8 @@
   '';
 
   programs.zsh.promptInit = ""; # Clear this to avoid a conflict with oh-my-zsh
+
+  system.autoUpgrade.enable = true;
 
   # This value determines the NixOS release with which your system is to be
   # compatible, in order to avoid breaking some software such as database
